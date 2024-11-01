@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shop Preview</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    .product {
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .product h3 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    .product p {
+      margin: 0;
+      color: #777;
+    }
+
+    .product .price {
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .product button {
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .product button:hover {
+      background-color: #45a049;
+    }
+
+    .payment-form {
+      margin-top: 20px;
+    }
+
+    .sq-input {
+      font-size: 16px;
+      padding: 5px;
+    }
+
+    .payment-message {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    @media (max-width: 480px) {
+      .product {
+        padding: 10px;
+      }
+
+      .product button {
+        padding: 8px 15px;
+        font-size: 14px;
+      }
+    }
+
+    .gbb {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  background-color: #4CAF50;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.gbb:hover {
+  background-color: #45a049;
+}
+
+.gbb:active {
+  background-color: #3e8e41;
+}
+    
+  </style>
+</head>
+<body>
+  <h1>Welcome to Our Shop</h1>
+  
+  <div id="products"></div>
+
+<center>
+  <h2 style="color: red;">No Products Added!!!!!!</h2>
+
+    <br>
+    <p>Version Info: V0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1 BETA</p>
+    <br>
+  </center>
+  
+  <script src="https://js.squareup.com/v2/paymentform"></script>
+  <script>
+    // Replace with your Square API credentials
+    const squareApplicationId = 'YOUR_SQUARE_APPLICATION_ID';
+    const squareLocationId = 'YOUR_SQUARE_LOCATION_ID';
+
+    // Fetch products from Square API
+    fetchProducts();
+
+    async function fetchProducts() {
+      try {
+        const response = await fetch('/api/products'); // Replace with your API endpoint to fetch products
+        const products = await response.json();
+        displayProducts(products);
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+      }
+    }
+
+    function displayProducts(products) {
+      const productsContainer = document.getElementById('products');
+
+      if (products.length === 0) {
+        productsContainer.innerHTML = '<p>No products available.</p>';
+        return;
+      }
+
+      products.forEach((product) => {
+        const productElement = document.createElement('div');
+        productElement.classList.add('product');
+        productElement.innerHTML = `
+          <h3>${product.name}</h3>
+          <p>${product.description}</p>
+          <p class="price">Price: $${product.price}</p>
+          <button onclick="initiatePayment('${product.id}', ${product.price})">Buy Now</button>
+        `;
+        productsContainer.appendChild(productElement);
+      });
+    }
+
+    function initiatePayment(productId, amount) {
+      const paymentForm = new SqPaymentForm({
+        applicationId: squareApplicationId,
+        locationId: squareLocationId,
+        autoBuild: false,
+        inputClass: 'sq-input',
+        inputStyles: [
+          {
+            fontSize: '16px',
+            padding: '5px',
+          },
+        ],
+        cardNumber: {
+          elementId: 'sq-card-number',
+          placeholder: 'Card Number',
+        },
+        cvv: {
+          elementId: 'sq-cvv',
+          placeholder: 'CVV',
+        },
+        expirationDate: {
+          elementId: 'sq-expiration-date',
+          placeholder: 'MM/YY',
+        },
+        postalCode: {
+          elementId: 'sq-postal-code',
+          placeholder: 'Postal Code',
+        },
+        callbacks: {
+          cardNonceResponseReceived: function (errors, nonce, cardData) {
+            if (errors) {
+              console.error('Encountered errors:', errors);
+              return;
+            }
+            // Handle the nonce to complete the payment
+            completePayment(nonce, productId, amount);
+          },
+        },
+      });
+
+      // Build the payment form dynamically
+      paymentForm.build();
+      paymentForm.recalculateSize();
+    }
+
+    async function completePayment(nonce, productId, amount) {
+      try {
+        const response = await fetch('/api/process_payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            nonce,
+            productId,
+            amount,
+          }),
+        });
+        const result = await response.json();
+        if (result.success) {
+          // Payment successful, show confirmation message or redirect to success page
+          const paymentMessage = document.createElement('div');
+          paymentMessage.classList.add('payment-message');
+          paymentMessage.textContent = 'Payment successful! Thank you for your purchase.';
+          document.body.appendChild(paymentMessage);
+        } else {
+          // Payment failed, display error message or redirect to error page
+          const paymentMessage = document.createElement('div');
+          paymentMessage.classList.add('payment-message');
+          paymentMessage.textContent = 'Payment failed. Please try again.';
+          document.body.appendChild(paymentMessage);
+        }
+      } catch (error) {
+        console.error('Failed to complete payment:', error);
+        // Display error message or redirect to error page
+        const paymentMessage = document.createElement('div');
+        paymentMessage.classList.add('payment-message');
+        paymentMessage.textContent = 'An error occurred during payment processing.';
+        document.body.appendChild(paymentMessage);
+      }
+    }
+  </script>
+</body>
+</html>
+
+<script>
+  alert("NEED A PRODUCT ID OR MORE THAN ONE PRODUCT ID TO SHOW PRODUCTS ON THE WEBSITE AND BTW THOUGH BTW THIS USES SQUARE API Anyways Though Btw Bruh This Beta Preview Testing Version Info Is: V0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1 BETA!!!!!!");
+</script>
+
+<center>
+<a href="Version-Info.html"><button class="gbb">Go Back</button></a>
+</center>
+
+ <script src="https://coltensus.repl.co/Offline-Screen.js"></script>
+
+   <script src="https://coltensus.repl.co/devicedetailsgetterforconsolelogonly.js"></script>
