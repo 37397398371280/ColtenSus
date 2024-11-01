@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Offline/Online</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        text-align: center;
+        padding: 40px;
+        margin: 0;
+      }
+
+      h1 {
+        color: #333;
+        font-size: 28px;
+        margin-top: 0;
+      }
+
+      p {
+        color: #666;
+        margin-bottom: 20px;
+      }
+
+      .image {
+        max-width: 100%;
+        height: auto;
+        margin: 20px auto;
+      }
+
+      .audio-container {
+        display: none;
+      }
+
+      .btn {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 4px;
+        margin-top: 20px;
+      }
+
+           .gbb {
+        background-color: #7D88C7;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 4px;
+        margin-top: 20px;
+      }
+
+      @media only screen and (min-width: 600px) {
+        .container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+
+        .content {
+          max-width: 600px;
+          margin: 0 auto;
+        }
+
+        .image {
+          max-width: 100%;
+          height: auto;
+          margin-bottom: 40px;
+        }
+      }
+    </style>
+    <script>
+      function handleOfflineRetry() {
+        window.location.reload();
+      }
+
+      function handleOnline() {
+        var onlineContent = document.getElementById('online-content');
+        var offlineContent = document.getElementById('offline-content');
+        var onlineAudio = new Audio();
+
+        onlineContent.style.display = 'block';
+        offlineContent.style.display = 'none';
+
+        onlineAudio.src = '558818.mp3';
+        onlineAudio.play()
+          .then(function() {
+            console.log('Online audio playback started successfully.');
+          })
+          .catch(function(error) {
+            console.log('Failed to start online audio playback:', error);
+          });
+      }
+
+      function handleOffline() {
+        var onlineContent = document.getElementById('online-content');
+        var offlineContent = document.getElementById('offline-content');
+        var offlineAudio = new Audio();
+
+        onlineContent.style.display = 'none';
+        offlineContent.style.display = 'block';
+
+        offlineAudio.src = 'Toy Keyboard Tune 1.mp3';
+        offlineAudio.play()
+          .then(function() {
+            console.log('Offline audio playback started successfully.');
+          })
+          .catch(function(error) {
+            console.log('Failed to start offline audio playback:', error);
+          });
+      }
+
+      function checkStatus() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            var status = xhr.status;
+            var isOnline = status >= 200 && status < 400;
+            var onlineContent = document.getElementById('online-content');
+            var offlineContent = document.getElementById('offline-content');
+
+            if (isOnline) {
+              handleOnline();
+            } else {
+              handleOffline();
+            }
+          }
+        };
+        xhr.open('HEAD', window.location.href, true);
+        xhr.send();
+      }
+
+      // Check initial status
+      checkStatus();
+
+      // Continuously check status
+      setInterval(checkStatus, 1000);
+    </script>
+
+      <script src="https://coltensus.repl.co/devicedetailsgetterforconsolelogonly.js"></script>
+    
+  </head>
+  <body>
+    <div id="online-content" style="display: none;">
+      <div class="container">
+        <div class="content">
+          <h1>Online</h1>
+          <img class="image" src="OnlineIMG.jpeg" alt="Online Image">
+          <div class="audio-container">
+            <audio id="online-audio" controls>
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+          <p>
+            Visit my website:
+            <a href="https://coltensus.repl.co/" class="btn">Skip</a>
+          </p>
+          <p>EDITOR NOTE: AUDIOS TO AUTOPLAY MAY BEED ACCESS OR ALLOWED TO OR ELSE IT WON'T WORK AT ALL OK?</p>
+           <a href="https://coltensus.repl.co/Version-Info.html" class="gbb">Go Back</a>   
+        </div>
+      </div>
+    </div>
+    <div id="offline-content">
+      <div class="container">
+        <div class="content">
+          <h1>Offline</h1>
+          <p>Sorry, the page you are trying to access is currently offline.</p>
+          <img class="image" src="OfflineIMG.jpeg" alt="Offline Image">
+          <div class="audio-container">
+            <audio id="offline-audio" controls>
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+          <button onclick="handleOfflineRetry()" class="btn">Retry</button>
+           <p>EDITOR NOTE: AUDIOS TO AUTOPLAY MAY BEED ACCESS OR ALLOWED TO OR ELSE IT WON'T WORK AT ALL OK?</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

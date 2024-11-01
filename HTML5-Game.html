@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My HTML5 Game</title>
+    <style>
+      /* CSS styles for the game board */
+      #game-board {
+        width: 100%;
+        max-width: 600px;
+        height: 600px;
+        border: 1px solid #000;
+        position: relative;
+        margin: 0 auto;
+      }
+
+      /* CSS styles for the player */
+      .player {
+        width: 80px;
+        height: 80px;
+        background-color: blue;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        transition: all 0.2s ease-in-out;
+      }
+
+      /* CSS styles for player animation */
+      .player:focus {
+        outline: none;
+        box-shadow: 0 0 5px yellow;
+      }
+
+     .gbb {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  background-color: #4CAF50;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.gbb:hover {
+  background-color: #45a049;
+}
+
+.gbb:active {
+  background-color: #3e8e41;
+} 
+      
+    </style>
+  </head>
+  <body>
+    <div id="game-board"></div>
+
+
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const gameBoard = document.getElementById("game-board");
+        const player = document.createElement("div");
+        player.classList.add("player");
+
+        // Load player position from local storage if available
+        const savedPosition = localStorage.getItem("playerPosition");
+        if (savedPosition) {
+          const { top, left } = JSON.parse(savedPosition);
+          player.style.top = top;
+          player.style.left = left;
+        }
+
+        gameBoard.appendChild(player);
+
+        // Save player position to local storage on movement
+        function savePosition() {
+          const playerPosition = {
+            top: player.style.top,
+            left: player.style.left
+          };
+          localStorage.setItem("playerPosition", JSON.stringify(playerPosition));
+        }
+
+        // Move the player on key press or touch event
+        function movePlayer(dx, dy) {
+          const playerPosition = player.getBoundingClientRect();
+          const left = playerPosition.left + dx;
+          const top = playerPosition.top + dy;
+
+          player.style.left = left + "px";
+          player.style.top = top + "px";
+
+          savePosition();
+        }
+
+        document.addEventListener("keydown", (event) => {
+          const key = event.key;
+
+          if (key === "ArrowUp") {
+            movePlayer(0, -10);
+          } else if (key === "ArrowDown") {
+            movePlayer(0, 10);
+          } else if (key === "ArrowLeft") {
+            movePlayer(-10, 0);
+          } else if (key === "ArrowRight") {
+            movePlayer(10, 0);
+          }
+        });
+
+        // Touch events for mobile support
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        gameBoard.addEventListener("touchstart", (event) => {
+          const touch = event.touches[0];
+          touchStartX = touch.clientX;
+          touchStartY = touch.clientY;
+        });
+
+        gameBoard.addEventListener("touchend", (event) => {
+          const touch = event.changedTouches[0];
+          const touchEndX = touch.clientX;
+          const touchEndY = touch.clientY;
+
+          const dx = touchEndX - touchStartX;
+          const dy = touchEndY - touchStartY;
+
+          movePlayer(dx, dy);
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<br>
+
+<center>
+<a href="Version-Info.html"><button class="gbb">Go Back</button></a>
+</center>
+
+<br>
+
+ <script src="https://coltensus.repl.co/Offline-Screen.js"></script>
+
+ <script src="https://coltensus.repl.co/devicedetailsgetterforconsolelogonly.js"></script>

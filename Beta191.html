@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+
+background-image: url('CSSYI.jpeg');
+            background-size: cover;
+            background-position: center;
+          
+        }
+        
+        #loadingText {
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.3;
+            }
+        }
+        
+        #animatedText {
+            font-size: 48px;
+            font-family: Arial, sans-serif;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 20px;
+            color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: top 2s, left 2s;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            visibility: hidden;
+
+
+          
+        }
+        
+        #versionInfo {
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #888888;
+            opacity: 0.8;
+        }
+        
+        body {
+            position: relative;
+            height: 100vh;
+            background-color: #f8f8f8;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+          background-image: url('CSSYBI.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+
+<title>Colten Sus</title>
+ 
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+  
+</head>
+<body>
+    <div id="loadingScreen">
+        <span id="loadingText">Loading CS...</span>
+    </div>
+    
+    <div id="animatedText" onclick="playSound()">Colten Sus</div>
+   <a href="B191VIP.html"><div id="versionInfo">Version 1.9.1 BETA (OUTDATED)</div></a>
+
+    <script>
+        var animatedText = document.getElementById('animatedText');
+        var bodyWidth = document.body.clientWidth;
+        var bodyHeight = document.body.clientHeight;
+        var previousColor = "";
+        
+        function generateRandomColor() {
+            var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+            
+            // Ensure the newly generated color is not white (#ffffff)
+            if (color === '#ffffff') {
+                return generateRandomColor();
+            }
+            
+            return color;
+        }
+        
+        function moveText() {
+            var randomX = Math.floor(Math.random() * (bodyWidth - 200));
+            var randomY = Math.floor(Math.random() * (bodyHeight - 200));
+            
+            animatedText.style.top = randomY + 'px';
+            animatedText.style.left = randomX + 'px';
+            
+            var randomColor = generateRandomColor();
+            animatedText.style.backgroundColor = randomColor;
+        }
+        
+        window.addEventListener('load', function() {
+            var loadingScreen = document.getElementById('loadingScreen');
+            
+            loadingScreen.style.opacity = 0;
+            setTimeout(function() {
+                loadingScreen.style.display = 'none';
+            }, 1000);
+                  animatedText.style.visibility = 'visible';
+        
+        moveText(); // Randomize initial position and color
+        setInterval(moveText, 3000);
+    });
+</script>
+
+  <script>
+    function playSound() {
+      var audio = new Audio('OtherClickSound.mp3'); // Replace 'path/to/sound.mp3' with the actual path to your sound file
+      audio.play();
+    }
+  </script>
+
+ <script src="https://coltensus.repl.co/Offline-Screen.js"></script>
+
+  <script src="https://coltensus.repl.co/devicedetailsgetterforconsolelogonly.js"></script>
+  
+</body>
+</html>
