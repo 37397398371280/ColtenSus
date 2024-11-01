@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title><![CDATA[🚀 Version 1.9.7.5 Released 🚀]]></title>
+    <link>https://coltensus.repl.co/Version-Info.html</link>
+    <description><![CDATA[<p style="font-size: 18px; color: #ff6600; font-weight: bold;">Exciting News!</p>]]></description>
+    <item>
+      <title><![CDATA[<h1 style="color: #3366ff;">Introducing Version 1.9.7.5</h1>]]></title>
+      <link>https://coltensus.repl.co/Version-Info.html</link>
+      <description><![CDATA[<p style="font-size: 16px;">We are thrilled to announce the release of Version 1.9.7.5, packed with amazing new features and enhancements. Don't miss out!</p>]]></description>
+      <pubDate>Friday, Oct 27 2023</pubDate>
+      <guid>https://coltensus.repl.co/Version-Info.html</guid>
+    </item>
+  </channel>
+</rss>
