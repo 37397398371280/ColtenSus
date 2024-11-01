@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clicking Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      overflow: hidden;
+      user-select: none;
+    }
+    
+    h1 {
+      font-size: 120px;
+      margin-top: 0;
+      margin-bottom: 60px;
+      color: #fff;
+    }
+    
+    #gameContainer {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    
+    #clicksDisplay {
+      font-size: 96px;
+      margin-bottom: 80px;
+      color: #fff;
+    }
+    
+    #clickButton {
+      width: 800px;
+      height: 800px;
+      font-size: 80px;
+      border-radius: 50%;
+      background-color: #2196f3;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px; /* Added margin to separate from Reset Clicks button */
+    }
+    
+    #clickButton:hover {
+      background-color: #1976d2;
+    }
+
+    #resetButton {
+      width: 200px;
+      height: 60px;
+      font-size: 25px;
+      font-weight: bold;
+      background-color: #ff0000;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+    }
+
+    #resetButton:hover {
+      background-color: #cc0000;
+    }
+    
+    @media only screen and (max-width: 600px) {
+      h1 {
+        font-size: 80px;
+        margin-bottom: 50px;
+      }
+      
+      #clickButton {
+        width: 400px;
+        height: 400px;
+        font-size: 64px;
+      }
+      
+      #clicksDisplay {
+        font-size: 80px;
+        margin-bottom: 70px;
+      }
+    }
+
+    .gbb {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 25px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      background-color: #4CAF50;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .gbb:hover {
+      background-color: #45a049;
+    }
+
+    .gbb:active {
+      background-color: #3e8e41;
+    }
+  </style>
+</head>
+<body>
+  <div id="gameContainer">
+    <h1 id="gameTitle">Clicking Game</h1>
+  
+    <p style="font-size: 48px;"><span id="scoreText">Clicks:</span> <span id="clicksDisplay">0</span></p>
+    <button id="clickButton" onclick="increaseScore()">Click</button>
+
+    <button id="resetButton" class="resetButton" onclick="resetScore()">Reset Clicks</button> <!-- Added Reset Clicks button -->
+
+    <br>
+    <a href="Version-Info.html"><button class="gbb">Go Back</button></a>
+    <br>
+  </div>
+
+  <script>
+    var score = parseInt(localStorage.getItem('clickingGameScore')) || 0;
+    var scoreDisplay = document.getElementById('clicksDisplay');
+    var clickButton = document.getElementById('clickButton');
+    var gameTitle = document.getElementById('gameTitle');
+    var scoreText = document.getElementById('scoreText');
+    
+    scoreDisplay.textContent = score;
+    
+    function getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+    
+    function setRandomColors() {
+      var bgColor = getRandomColor();
+      var buttonColor = getRandomColor();
+      
+      while (buttonColor === bgColor) {
+        buttonColor = getRandomColor();
+      }
+      
+      var textColor = getRandomColor();
+      
+      document.body.style.backgroundColor = bgColor;
+      document.body.style.color = textColor;
+      gameTitle.style.color = textColor;
+      scoreText.style.color =  textColor;
+      scoreDisplay.style.color = textColor;
+      clickButton.style.backgroundColor = buttonColor;
+      clickButton.style.color = textColor;
+    }
+    
+    setRandomColors();
+    
+    function increaseScore() {
+      score++;
+      scoreDisplay.textContent = score;
+      localStorage.setItem('clickingGameScore', score.toString());
+      setRandomColors();
+    }
+
+    function resetScore() {
+      if (confirm("Are you sure you want to reset the score?")) {
+        score = 0;
+        scoreDisplay.textContent = score;
+        localStorage.setItem('clickingGameScore', score.toString());
+        alert("Score reset successful!");
+        setRandomColors();
+      } else {
+        alert("Score reset cancelled.");
+      }
+    }
+  </script>
+
+  <script>
+    if (!localStorage.getItem('epilepsyWarningShown') || new Date() - new Date(localStorage.getItem('epilepsyWarningShown')) > 24 * 60 * 60 * 1000) {
+        alert("Caution: This website may contain flashing colors. Viewer discretion is advised.");
+        localStorage.setItem('epilepsyWarningShown', new Date());
+    }
+  </script>
+
+  <script src="https://coltensus.repl.co/Offline-Screen.js"></script>
+  <script src="https://coltensus.repl.co/devicedetailsgetterforconsolelogonly.js"></script>
+</body>
+</html>
